@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import xss from 'xss-clean';
 import cors from 'cors';
 import httpStatus from 'http-status';
+import statusMonitor from 'express-status-monitor'
 
 import routes from './routes/index.js';
 import { errorHandler } from './middlewares/error.js';
@@ -12,6 +13,8 @@ import { ApiError } from './utils/Error.js';
 dotenv.config();
 
 const app = express();
+
+app.use(statusMonitor());
 
 // set security HTTP headers
 app.use(helmet());
@@ -35,7 +38,9 @@ app.use('/', routes);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
-  next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
+  if (!req.path.includes('socket')) {
+    next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
+  }
 });
 
 // handle error
