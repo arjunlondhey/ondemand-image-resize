@@ -48,7 +48,7 @@ const getResizedImage = async (req) => {
     { data, headers } = await _fetchImageFromUrl(req, decodeURI(url), 'stream');
 
   const pipeline = sharp().resize(width, height),
-    resizedImage = await data.pipe(pipeline).toBuffer();
+    resizedImage = await data.pipe(pipeline);
 
   return { resizedImage, headers };
 };

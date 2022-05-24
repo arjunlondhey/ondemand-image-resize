@@ -7,7 +7,8 @@ const resizeImage = catchAsync(async (req, res) => {
   const { resizedImage, headers } = await getResizedImage(req, res);
 
   res.set('Content-Type', headers['content-type']);
-  res.status(httpStatus.OK).send(resizedImage);
+  res.status(httpStatus.OK);
+  resizedImage.pipe(res);
 });
 
 export const ImageController = { resizeImage };
